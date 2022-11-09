@@ -5,13 +5,11 @@ import Scene=Laya.Scene;
 var REG: Function = Laya.ClassUtils.regClass;
 export module ui {
     export class gameUI extends Scene {
-        constructor(){ 
-            super();
-        }
+        constructor(){ super()}
         createChildren():void {
             super.createChildren();
             this.loadScene("game");
         }
     }
     REG("ui.gameUI",gameUI);
-}
+}

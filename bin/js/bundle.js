@@ -1,27 +1,135 @@
 (function () {
     'use strict';
 
-    class Monster extends Laya.Sprite {
+    var Scene = Laya.Scene;
+    var REG = Laya.ClassUtils.regClass;
+    var ui;
+    (function (ui) {
+        class gameUI extends Scene {
+            constructor() { super(); }
+            createChildren() {
+                super.createChildren();
+                this.loadScene("game");
+            }
+        }
+        ui.gameUI = gameUI;
+        REG("ui.gameUI", gameUI);
+    })(ui || (ui = {}));
+
+    class GameUI extends ui.gameUI {
         constructor() {
             super();
-            this.jumpHeight = 10;
+            GameUI.instance = this;
+            console.log('zytest: gameUI constructor');
+        }
+        static getInstance() {
+            return GameUI.instance ? GameUI.instance : GameUI.instance = new GameUI();
+        }
+        onAwake() {
+            console.log('zytest: console game awake');
+        }
+    }
+
+    var Event = Laya.Event;
+    class Monster extends Laya.Script {
+        constructor() {
+            super();
+            this.jumpHeight = 150;
             this.jumpDuration = 300;
-            this.maxMoveSpeed = 0;
-            this.accel = 0;
-            console.log('zytest: constructor init');
-            this.x = 850;
-            this.y = 500;
+            this.maxMoveSpeed = 4;
+            this.accel = 30;
+            this.xSpeed = 0;
+            this.accLeft = false;
+            this.accRight = false;
+        }
+        onAwake() {
+            this.player = this.owner;
+            this.player.x = 850;
+            this.player.y = 500;
             this.runJumpAction();
+            Laya.stage.on(Event.KEY_DOWN, this, this._onKeyDown);
+            Laya.stage.on(Event.KEY_UP, this, this._onKeyUp);
+        }
+        onEnable() {
+        }
+        onStart() {
         }
         runJumpAction() {
-            const timeline = Laya.TimeLine.to(this, { y: this.y - 200 }, this.jumpDuration).to(this, { y: this.y }, this.jumpDuration);
+            const timeline = Laya.TimeLine.to(this.player, { y: this.player.y - 200 }, this.jumpDuration).to(this.player, { y: this.player.y }, this.jumpDuration);
             timeline.play(null, true);
         }
-        _onKeyDown() {
-            console.log('zytest: onkeydown');
+        _onKeyDown(e) {
+            switch (e.keyCode) {
+                case 37:
+                    this.accLeft = true;
+                    console.log('zytest: this.accLeft', this);
+                    break;
+                case 39:
+                    this.accRight = true;
+                    break;
+            }
         }
-        onKeyDown() {
-            console.log('zytest: onkeydown33');
+        _onKeyUp(e) {
+            switch (e.keyCode) {
+                case 37:
+                    this.accLeft = false;
+                    console.log('zytest: this.accLeft', this);
+                    break;
+                case 39:
+                    this.accRight = false;
+                    break;
+            }
+        }
+        onUpdate() {
+            if (this.accLeft === true) {
+                console.log('successin');
+                this.xSpeed -= this.accel;
+            }
+            if (this.accRight === true) {
+                console.log('successin2');
+                console.log('zytest: right');
+                this.xSpeed += this.accel;
+            }
+            if (Math.abs(this.xSpeed) > this.maxMoveSpeed) {
+                this.xSpeed = this.maxMoveSpeed * this.xSpeed / Math.abs(this.xSpeed);
+            }
+            this.player.x += this.xSpeed;
+        }
+        onDisable() {
+            Laya.stage.off(Event.KEY_DOWN, this, this._onKeyDown);
+            Laya.stage.off(Event.KEY_UP, this, this._onKeyUp);
+        }
+    }
+
+    class GameControl extends Laya.Script {
+        constructor() {
+            super();
+            this.maxStarDuration = 0;
+            this.minStarDuration = 0;
+            this.groundY = 0;
+        }
+        onEnable() {
+            this.groundY = this.owner.getChildByName('ground').y;
+            this.spawnNewStar();
+        }
+        onDisable() {
+        }
+        spawnNewStar() {
+            console.log('zytest: 111111111');
+            console.log('zytest: starPrefab', this.starPrefab);
+        }
+        getNewStarPosition() {
+        }
+    }
+
+    class Star extends Laya.Script {
+        constructor() {
+            super();
+            this.pickRadius = 0;
+        }
+        onEnable() {
+        }
+        onDisable() {
         }
     }
 
@@ -29,7 +137,10 @@
         constructor() { }
         static init() {
             var reg = Laya.ClassUtils.regClass;
+            reg("script/GameUI.ts", GameUI);
             reg("script/Monster.ts", Monster);
+            reg("script/GameControl.ts", GameControl);
+            reg("script/Star.ts", Star);
         }
     }
     GameConfig.width = 1360;
