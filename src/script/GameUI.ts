@@ -19,7 +19,6 @@ export default class GameUI extends ui.gameUI {
     constructor() {
         super();
         GameUI.instance = this;
-        // this.createChildren();
         console.log('zytest: gameUI constructor');
     }
     onAwake() {

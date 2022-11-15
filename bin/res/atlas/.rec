@@ -42,6 +42,27 @@ P 0587871F vscroll$up.png
 P 5FD17798 vscroll.png
 P DDDDFB9E vslider$bar.png
 P 01BAE7F5 vslider.png
+D icon
+P 2183111C 1.png
+P 49DD63AB 10.png
+P 1EDF0DEF 11.png
+P 758B0444 12.png
+P 13DE51C6 13.png
+P 4B7EC553 14.png
+P 69CA8530 15.png
+P 151DE2D8 16.png
+P 1B2EAF8E 17.png
+P 2A5BA0C7 18.png
+P 7449D83A 19.png
+P 0E7DBF74 2.png
+P CDD2E3A8 20.png
+P BA700F69 3.png
+P F0EC2F73 4.png
+P FF09C4DE 5.png
+P DA3F1B76 6.png
+P 495A6B70 7.png
+P 77B50CB7 8.png
+P 92C58F1A 9.png
 D texture
 R 23D8C545 background.jpg
 P B9BCC1A1 btn_play.png

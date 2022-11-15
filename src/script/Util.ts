@@ -1,8 +1,13 @@
 export default class Util {
     static instance: Util;
 
-    constructor() {
-        Util.instance = this;
+    constructor() {}
+
+    static getInstance() {
+        if (!Util.instance) {
+            Util.instance = new Util();
+        }
+        return Util.instance;
     }
 
     /**

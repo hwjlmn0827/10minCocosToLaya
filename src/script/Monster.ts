@@ -25,6 +25,9 @@ export default class Monster extends Laya.Script{
     /** @prop {name:player, tips:"主角 ", type:Laya.Sprite}*/
     public player: Laya.Sprite;
 
+    /** @prop {name:timeline, tips:"时间轴动画 ", type:Laya.TimeLine}*/
+    public timeline: Laya.TimeLine;
+
     constructor() {
         super();
     }
@@ -33,8 +36,6 @@ export default class Monster extends Laya.Script{
         this.player = this.owner as Laya.Sprite;
         this.player.x = 850;
         this.player.y = 500;
-        // this.accLeft = false;
-        // this.accRight = false;
         this.runJumpAction();
         // 按键监听 stage
         Laya.stage.on(Event.KEY_DOWN, this, this._onKeyDown);
@@ -47,18 +48,24 @@ export default class Monster extends Laya.Script{
     }
 
     runJumpAction () {
-        const timeline = Laya.TimeLine.to(this.player, { y: this.player.y - 200 }, this.jumpDuration).to(this.player, { y: this.player.y }, this.jumpDuration);
-        timeline.play(null, true);
+        this.timeline = Laya.TimeLine.to(this.player, { y: this.player.y - 200 }, this.jumpDuration).to(this.player, { y: this.player.y }, this.jumpDuration);
+        this.timeline.play(null, true);
+    }
+
+    runJumpAction2 () {
     }
 
     private _onKeyDown(e: Event): void{
+        console.log('zytest: e.keyCode', e.keyCode);
         switch(e.keyCode) {
             case 37:
                 this.accLeft = true;
-                console.log('zytest: this.accLeft', this);
                 break;
             case 39:
                 this.accRight = true;
+                break;
+            case 40:
+                // this.timeline.pause();
                 break;
         }
     }
@@ -67,27 +74,39 @@ export default class Monster extends Laya.Script{
         switch(e.keyCode) {
             case 37:
                 this.accLeft = false;
-                console.log('zytest: this.accLeft', this);
                 break;
             case 39:
                 this.accRight = false;
+                break;
+            case 40:
+                // this.timeline.resume();
                 break;
         }
     }
 
     // cocos: update 会在场景加载后每帧调用一次，我们一般把需要经常计算或及时更新的逻辑内容放在 update 中。在我们的游戏里，根据键盘输入获得加速度方向后，就需要每帧在 update 中计算主角的速度和位置。
     onUpdate() {
-        // console.log('zytest: onUpdate', this.accLeft);
+        console.log('zytest: onUpdate', this.player.x);
+        let stageWidth = Laya.stage.width
         // 根据当前加速度方向每帧更新速度
-        if (this.accLeft === true) {
-            console.log('successin', );
-            this.xSpeed -= this.accel;
+        if (this.player.x > stageWidth - 10 && this.player.x < stageWidth + 10 && this.accRight) {
+            console.log('zytest: tail', );
+            this.player.x = Laya.stage.x;
+        } else if (this.player.x >= 0 && this.player.x < 20 && this.accLeft ) {
+            console.log('zytest: head', );
+            this.player.x = stageWidth- this.player.width;
         }
-        if (this.accRight === true) {
-            console.log('successin2', );
-            console.log('zytest: right', );
+
+        if (this.accLeft === true) {
+            this.xSpeed -= this.accel;
+        } else if (this.accRight === true) {
             this.xSpeed += this.accel;
         }
+
+        // check keyup不停 有惯性
+        // else {
+        //     this.xSpeed = 0;
+        // }
 
         // 限制主角的速度不能超过最大值
         if (Math.abs(this.xSpeed) > this.maxMoveSpeed) {
@@ -104,6 +123,10 @@ export default class Monster extends Laya.Script{
         // Laya.Pool.recover("dropBox", this);
         Laya.stage.off(Event.KEY_DOWN, this, this._onKeyDown);
         Laya.stage.off(Event.KEY_UP, this, this._onKeyUp);
+    }
+
+    stopAllActions() {
+        this.timeline.reset();
     }
 
 }

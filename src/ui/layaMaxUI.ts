@@ -3,7 +3,31 @@ import View=Laya.View;
 import Dialog=Laya.Dialog;
 import Scene=Laya.Scene;
 var REG: Function = Laya.ClassUtils.regClass;
+export module ui.anim {
+    export class testEfcUI extends Laya.EffectAnimation {
+        public static  uiView:any ={"type":"View","props":{},"compId":2,"child":[{"type":"Sprite","props":{"y":8,"x":-2,"texture":"icon/11.png"},"compId":3}],"loadList":["icon/11.png"],"loadList3D":[]};
+        constructor(){ super();this.effectData =testEfcUI.uiView;}
+    }
+    REG("ui.anim.testEfcUI",testEfcUI);
+    export class tweenEffUI extends Laya.EffectAnimation {
+		public ani:Laya.FrameAnimation;
+        public static  uiView:any ={"type":"View","props":{},"compId":2,"child":[{"type":"Sprite","props":{"y":0,"x":-24,"texture":"icon/2.png"},"compId":4}],"animations":[{"nodes":[{"target":4,"keyframes":{"y":[{"value":0,"tweenMethod":"linearNone","tween":true,"target":4,"key":"y","index":0},{"value":128,"tweenMethod":"linearNone","tween":true,"target":4,"key":"y","index":100}],"x":[{"value":-24,"tweenMethod":"linearNone","tween":true,"target":4,"key":"x","index":0},{"value":-24,"tweenMethod":"linearNone","tween":true,"target":4,"key":"x","index":1},{"value":221,"tweenMethod":"linearNone","tween":true,"target":4,"key":"x","index":100}]}}],"name":"ani","id":7,"frameRate":100,"action":0}],"loadList":["icon/2.png"],"loadList3D":[]};
+        constructor(){ super();this.effectData =tweenEffUI.uiView;}
+    }
+    REG("ui.anim.tweenEffUI",tweenEffUI);
+}
 export module ui {
+    export class flowUI extends Scene {
+		public ani1:Laya.FrameAnimation;
+		public textTween:Laya.Sprite;
+		public tw:ui.anim.tweenEffUI;
+        constructor(){ super()}
+        createChildren():void {
+            super.createChildren();
+            this.loadScene("flow");
+        }
+    }
+    REG("ui.flowUI",flowUI);
     export class gameUI extends Scene {
         constructor(){ super()}
         createChildren():void {
@@ -12,4 +36,31 @@ export module ui {
         }
     }
     REG("ui.gameUI",gameUI);
+}
+export module ui.scene {
+    export class fenliUI extends Scene {
+        constructor(){ super()}
+        createChildren():void {
+            super.createChildren();
+            this.loadScene("scene/fenli");
+        }
+    }
+    REG("ui.scene.fenliUI",fenliUI);
+    export class jiazaiUI extends Scene {
+        constructor(){ super()}
+        createChildren():void {
+            super.createChildren();
+            this.loadScene("scene/jiazai");
+        }
+    }
+    REG("ui.scene.jiazaiUI",jiazaiUI);
+    export class neiqianxUI extends Scene {
+        public static  uiView:any ={"type":"Scene","props":{"width":1360,"height":760},"compId":2,"child":[{"type":"Sprite","props":{"name":"testS"},"compId":3},{"type":"Text","props":{"text":"text","name":"testT","runtime":"Laya.Text"},"compId":4}],"loadList":[],"loadList3D":[]};
+        constructor(){ super()}
+        createChildren():void {
+            super.createChildren();
+            this.createView(neiqianxUI.uiView);
+        }
+    }
+    REG("ui.scene.neiqianxUI",neiqianxUI);
 }
